@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedIn: boolean = false;
-
   constructor() { }
 
   // Método para iniciar sesión
@@ -13,7 +11,7 @@ export class AuthService {
     // Aquí podrías realizar la lógica de autenticación, como enviar una solicitud HTTP al backend
     // para verificar las credenciales del usuario. Por ahora, simplemente simularemos una autenticación exitosa.
     if (email === 'admin@admin.com' && password === 'admin') {
-      this.isLoggedIn = true;
+      localStorage.setItem('token', "MI-TOKEN-BIEN-CHIDORI");
       return true;
     } else {
       return false;
@@ -22,11 +20,12 @@ export class AuthService {
 
   // Método para cerrar sesión
   logout(): void {
-    this.isLoggedIn = false;
+    localStorage.removeItem('token');
   }
 
   // Método para verificar si el usuario está autenticado
   isAuthenticated(): boolean {
-    return this.isLoggedIn;
+    const token = localStorage.getItem('token');
+    return token !== null;
   }
 }
