@@ -1,0 +1,23 @@
+.textarea-description{
+    resize: none !important;
+}
+
+.icon:hover{
+    cursor: pointer;
+    color: black;
+}
+
+.detail-icon{
+    font-size: 24px;
+    color: dodgerblue;
+}
+
+.edit-icon{
+    font-size: 24px;
+    color: green;
+}
+
+.remove-icon{
+    font-size: 24px;
+    color: red;
+}

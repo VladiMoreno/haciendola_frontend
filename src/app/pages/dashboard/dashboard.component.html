@@ -1,1 +1,191 @@
-<p>dashboard works!</p>
+<div class="container">
+  <div class="col mt-5">
+    <div class="row justify-content-end">
+      <div class="col-4">
+        <button type="button" class="btn btn-primary" (click)="openModel()">
+          Add new product <i class="bi bi-plus-circle ms-2"></i>
+        </button>
+      </div>
+    </div>
+    @if (productList.length !== 0) {
+    <div class="row justify-content-center mt-5">
+      <div class="col-8">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of productList; track $index) {
+            <tr>
+              <th scope="row">{{ $index + 1 }}</th>
+              <td>{{ item.title }}</td>
+              <td>${{ item.price }}</td>
+              <td>
+                <i
+                  class="bi bi-eye icon detail-icon"
+                  (click)="onDetailMode(item)"
+                ></i>
+                <i
+                  class="bi bi-pencil ms-2 icon edit-icon"
+                  (click)="onEdit(item)"
+                ></i>
+                <i
+                  class="bi bi-trash ms-2 icon remove-icon"
+                  (click)="onDelete(item)"
+                ></i>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    } @else {
+    <div class="row justify-content-center mt-5">
+      <div class="col-12 p-4 text-center">
+        <p>No Record Found. Create New Record</p>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<div class="modal" id="myModal" #myModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        @if (detailMode) {
+        <h4 class="modal-title">Detail Product</h4>
+        } @else if (productObj.id !== 0) {
+        <h4 class="modal-title">Update Product</h4>
+        } @else {
+        <h4 class="modal-title">Create New Product</h4>
+        }
+        <button type="button" class="btn-close" (click)="closeModel()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="">Title</label>
+            <input
+              type="text"
+              [(ngModel)]="productObj.title"
+              class="form-control"
+              placeholder="Title"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="">Handle</label>
+            <input
+              type="text"
+              [(ngModel)]="productObj.handle"
+              class="form-control"
+              placeholder="Handle"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+          <div class="col-6">
+            <label for="">SKU</label>
+            <input
+              type="number"
+              [(ngModel)]="productObj.sku"
+              class="form-control"
+              placeholder="SKU"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="">Grams</label>
+            <input
+              type="number"
+              [(ngModel)]="productObj.grams"
+              class="form-control"
+              placeholder="Grams"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+          <div class="col-6">
+            <label for="">Stock</label>
+            <input
+              type="number"
+              [(ngModel)]="productObj.stock"
+              class="form-control"
+              placeholder="Stock"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="">Price</label>
+            <input
+              type="number"
+              [(ngModel)]="productObj.price"
+              class="form-control"
+              placeholder="Price"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+          <div class="col-6">
+            <label for="">Compare Price</label>
+            <input
+              type="number"
+              [(ngModel)]="productObj.comparePrice"
+              class="form-control"
+              placeholder="Compare Price"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="">Description</label>
+            <textarea
+              class="textarea-description"
+              rows="3"
+              [(ngModel)]="productObj.description"
+              class="form-control"
+              required
+              [disabled]="detailMode"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      @if (!detailMode) {
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="closeModel()">
+          Close
+        </button>
+        @if (productObj.id == 0) {
+        <button type="button" class="btn btn-success" (click)="saveProduct()">
+          Save product
+          <i class="bi bi-floppy ms-2"></i>
+        </button>
+        } @else {
+        <button type="button" class="btn btn-success" (click)="updateProduct()">
+          UPDATE PRODUCT
+          <i class="bi bi-arrow-clockwise ms-2"></i>
+        </button>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</div>
