@@ -1,0 +1,77 @@
+<div class="all-height">
+  <form
+    name="form"
+    (ngSubmit)="f.form.valid && onLogin()"
+    #f="ngForm"
+    novalidate
+  >
+    <div class="login-container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group mt-3">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              [(ngModel)]="form.email"
+              required
+              email
+              #email="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
+              autocomplete="false"
+              [autocomplete]="false"
+            />
+            @if (email.errors && f.submitted) {
+            <div class="invalid-feedback">
+              @if (email.errors['required']) {
+              <div>Email is required</div>
+              } @if (email.errors['email']) {
+              <div>Email must be a valid email address</div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group mt-3">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              [(ngModel)]="form.password"
+              required
+              minlength="2"
+              #password="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
+              autocomplete="false"
+              [autocomplete]="false"
+            />
+            @if (password.errors && f.submitted) {
+            <div class="invalid-feedback">
+              @if (password.errors['required']) {
+              <div>Password is required</div>
+              } @if (password.errors['minlength']) {
+              <div>Password must be at least 2 characters</div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 mb-3">
+        <button class="btn btn-success pull-right">Login</button>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          @if (showError && f.submitted) {
+          <div ng-show="showError" class="alert alert-danger">
+            Wrong credentials!
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
