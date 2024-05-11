@@ -1,0 +1,19 @@
+<div class="product-form-container">
+    <h2>{{ isNew ? 'Agregar Producto' : 'Editar Producto' }}</h2>
+    <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input type="text" id="name" name="name" [(ngModel)]="product.name" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea id="description" name="description" [(ngModel)]="product.description" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">Precio</label>
+        <input type="number" id="price" name="price" [(ngModel)]="product.price" required>
+      </div>
+      <button type="submit">{{ isNew ? 'Agregar' : 'Guardar Cambios' }}</button>
+    </form>
+  </div>
+  

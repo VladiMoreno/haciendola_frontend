@@ -1,4 +1,4 @@
-.product-form-container {
+.login-container {
     max-width: 400px;
     margin: auto;
     padding: 20px;
@@ -16,8 +16,7 @@
   }
   
   input[type="text"],
-  textarea,
-  input[type="number"] {
+  input[type="password"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
