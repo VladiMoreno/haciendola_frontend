@@ -17,24 +17,31 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   showError: boolean;
   showSuccess: boolean;
+  errors: any;
   form: any = {
-    email: null,
+    username: null,
     password: null
   };
 
   constructor(private authService: AuthService, private router: Router){
     this.showError = false;
     this.showSuccess = false;
+    this.errors = null;
   }
 
-  onLogin(){
-    const { email, password } = this.form;
+  async onLogin() {
+    const { username, password } = this.form;
 
-    if(this.authService.login(email, password)){
-      this.showSuccess = true;
-      this.router.navigateByUrl('/dashboard');
-    }else {
-      this.showError = true;
-    }
+    this.authService.login(username, password).subscribe({
+      next: (value) => {
+        const { data } = value;
+        localStorage.setItem('token', data['token']);
+        this.router.navigateByUrl('/dashboard');
+      },
+      error: (err) => {
+        this.errors = err.error['message'];
+        this.showError = true;
+      },
+    });
   }
 }

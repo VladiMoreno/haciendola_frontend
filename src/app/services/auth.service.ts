@@ -1,21 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../config/env.config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  // Método para iniciar sesión
-  login(email: string, password: string): boolean {
-    // Aquí podrías realizar la lógica de autenticación, como enviar una solicitud HTTP al backend
-    // para verificar las credenciales del usuario. Por ahora, simplemente simularemos una autenticación exitosa.
-    if (email === 'admin@admin.com' && password === 'admin') {
-      localStorage.setItem('token', "MI-TOKEN-BIEN-CHIDORI");
-      return true;
-    } else {
-      return false;
-    }
+
+  login(username: string, password: string): Observable<any> {
+
+    return this.http.post(`${environment.apiUrl}auth/login`,{
+      "username" : username,
+      "password" : password,
+    });
   }
 
   // Método para cerrar sesión

@@ -2,7 +2,11 @@
   <div class="col mt-5">
     <div class="row justify-content-end">
       <div class="col-4">
-        <button type="button" class="btn btn-primary" (click)="openModel()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="openAddProductModel()"
+        >
           Add new product <i class="bi bi-plus-circle ms-2"></i>
         </button>
       </div>
@@ -23,8 +27,8 @@
             @for (item of productList; track $index) {
             <tr>
               <th scope="row">{{ $index + 1 }}</th>
-              <td>{{ item.title }}</td>
-              <td>${{ item.price }}</td>
+              <td>{{ item.product_title }}</td>
+              <td>${{ item.product_price }}</td>
               <td>
                 <i
                   class="bi bi-eye icon detail-icon"
@@ -61,10 +65,8 @@
       <div class="modal-header">
         @if (detailMode) {
         <h4 class="modal-title">Detail Product</h4>
-        } @else if (productObj.id !== 0) {
+        } @else if (productObj.pk_product_id !== 0) {
         <h4 class="modal-title">Update Product</h4>
-        } @else {
-        <h4 class="modal-title">Create New Product</h4>
         }
         <button type="button" class="btn-close" (click)="closeModel()"></button>
       </div>
@@ -74,7 +76,7 @@
             <label for="">Title</label>
             <input
               type="text"
-              [(ngModel)]="productObj.title"
+              [(ngModel)]="productObj.product_title"
               class="form-control"
               placeholder="Title"
               required
@@ -87,7 +89,7 @@
             <label for="">Handle</label>
             <input
               type="text"
-              [(ngModel)]="productObj.handle"
+              [(ngModel)]="productObj.product_handle"
               class="form-control"
               placeholder="Handle"
               required
@@ -98,7 +100,7 @@
             <label for="">SKU</label>
             <input
               type="number"
-              [(ngModel)]="productObj.sku"
+              [(ngModel)]="productObj.product_sku"
               class="form-control"
               placeholder="SKU"
               required
@@ -111,7 +113,7 @@
             <label for="">Grams</label>
             <input
               type="number"
-              [(ngModel)]="productObj.grams"
+              [(ngModel)]="productObj.product_grams"
               class="form-control"
               placeholder="Grams"
               required
@@ -122,7 +124,7 @@
             <label for="">Stock</label>
             <input
               type="number"
-              [(ngModel)]="productObj.stock"
+              [(ngModel)]="productObj.product_stock"
               class="form-control"
               placeholder="Stock"
               required
@@ -135,7 +137,7 @@
             <label for="">Price</label>
             <input
               type="number"
-              [(ngModel)]="productObj.price"
+              [(ngModel)]="productObj.product_price"
               class="form-control"
               placeholder="Price"
               required
@@ -146,10 +148,25 @@
             <label for="">Compare Price</label>
             <input
               type="number"
-              [(ngModel)]="productObj.comparePrice"
+              [(ngModel)]="productObj.product_compare_price"
               class="form-control"
               placeholder="Compare Price"
               required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="">Barcode</label>
+            <input
+              type="text"
+              [(ngModel)]="productObj.product_bar_code"
+              class="form-control"
+              placeholder="Barcode"
+              required
+              min="13"
+              max="13"
               [disabled]="detailMode"
             />
           </div>
@@ -160,7 +177,7 @@
             <textarea
               class="textarea-description"
               rows="3"
-              [(ngModel)]="productObj.description"
+              [(ngModel)]="productObj.product_description"
               class="form-control"
               required
               [disabled]="detailMode"
@@ -173,19 +190,155 @@
         <button type="button" class="btn btn-danger" (click)="closeModel()">
           Close
         </button>
-        @if (productObj.id == 0) {
-        <button type="button" class="btn btn-success" (click)="saveProduct()">
-          Save product
-          <i class="bi bi-floppy ms-2"></i>
-        </button>
-        } @else {
         <button type="button" class="btn btn-success" (click)="updateProduct()">
           UPDATE PRODUCT
           <i class="bi bi-arrow-clockwise ms-2"></i>
         </button>
-        }
       </div>
       }
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="addProductModal" #addProductModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create New Product</h4>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeAddProductModel()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="">Title</label>
+            <input
+              type="text"
+              [(ngModel)]="addProductObj.product_title"
+              class="form-control"
+              placeholder="Title"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="">Handle</label>
+            <input
+              type="text"
+              [(ngModel)]="addProductObj.product_handle"
+              class="form-control"
+              placeholder="Handle"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+          <div class="col-6">
+            <label for="">SKU</label>
+            <input
+              type="number"
+              [(ngModel)]="addProductObj.product_sku"
+              class="form-control"
+              placeholder="SKU"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="">Grams</label>
+            <input
+              type="number"
+              [(ngModel)]="addProductObj.product_grams"
+              class="form-control"
+              placeholder="Grams"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+          <div class="col-6">
+            <label for="">Stock</label>
+            <input
+              type="number"
+              [(ngModel)]="addProductObj.product_stock"
+              class="form-control"
+              placeholder="Stock"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="">Price</label>
+            <input
+              type="number"
+              [(ngModel)]="addProductObj.product_price"
+              class="form-control"
+              placeholder="Price"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+          <div class="col-6">
+            <label for="">Compare Price</label>
+            <input
+              type="number"
+              [(ngModel)]="addProductObj.product_compare_price"
+              class="form-control"
+              placeholder="Compare Price"
+              required
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="">Barcode</label>
+            <input
+              type="text"
+              [(ngModel)]="addProductObj.product_bar_code"
+              class="form-control"
+              placeholder="Barcode"
+              required
+              min="13"
+              max="13"
+              [disabled]="detailMode"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="">Description</label>
+            <textarea
+              class="textarea-description"
+              rows="3"
+              [(ngModel)]="addProductObj.product_description"
+              class="form-control"
+              required
+              [disabled]="detailMode"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="closeAddProductModel()"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-success" (click)="saveProduct()">
+          Save product
+          <i class="bi bi-floppy ms-2"></i>
+        </button>
+      </div>
     </div>
   </div>
 </div>

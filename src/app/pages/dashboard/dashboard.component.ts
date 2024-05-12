@@ -1,5 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DashboardService } from '../../services/dashboard.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,15 +15,44 @@ import { FormsModule } from '@angular/forms';
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('myModal') model: ElementRef | undefined;
+  @ViewChild('addProductModal') addProductModel: ElementRef | undefined;
   productObj: Product = new Product();
+  addProductObj: AddProduct = new AddProduct();
   productList: Product[] = [];
   detailMode: boolean = false;
 
+  constructor(private dashboardService : DashboardService, private authService: AuthService,private router: Router){}
+
   ngOnInit(): void {
-      const localData = localStorage.getItem("products");
-      if(localData != null){
-        this.productList = JSON.parse(localData);
-      }
+      this.dashboardService.getProductsByUser().subscribe({
+        next: (value) => {
+          const { data } = value;
+          const productList = data.map((item: any) => ({
+            pk_product_id: item.pk_product_id,
+            product_handle: item.product_handle,
+            product_title: item.product_title,
+            product_description: item.product_description,
+            product_sku: item.product_sku,
+            product_grams: item.product_grams,
+            product_stock: item.product_stock,
+            product_price: item.product_price,
+            product_compare_price: item.product_compare_price,
+            product_bar_code: item.product_bar_code
+          }));
+          this.productList = productList;
+        },
+        error: (err) => {
+          this.authService.logout();
+          this.router.navigateByUrl('/login');
+        },
+      });
+  }
+
+  openAddProductModel(){
+    const addProductModel = document.getElementById("addProductModal");
+    if (addProductModel != null) {
+      addProductModel.style.display = 'block'
+    }
   }
 
   openModel(){
@@ -40,10 +72,17 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  closeAddProductModel(){
+    this.productObj = new Product();
+    if (this.addProductModel != null) {
+      this.addProductModel.nativeElement.style.display = 'none';
+    }
+  }
+
   onDelete(item: Product) {
     const isDelet = confirm("Are you sure want to Delete");
     if(isDelet) {
-      const currentRecord =  this.productList.findIndex(m=> m.id === this.productObj.id);
+      const currentRecord =  this.productList.findIndex(m=> m.pk_product_id === this.productObj.pk_product_id);
       this.productList.splice(currentRecord,1);
       localStorage.setItem('products', JSON.stringify(this.productList));
     }
@@ -60,71 +99,112 @@ export class DashboardComponent implements OnInit {
     this.openModel();
   }
 
-
-
   saveProduct(){
-    const isLocalPresent = localStorage.getItem("products");
-    if (isLocalPresent != null) {
-      
-      const oldArray = JSON.parse(isLocalPresent);
-      this.productObj.id = oldArray.length + 1;
-      oldArray.push(this.productObj);
-      this.productList = oldArray;
-      localStorage.setItem('products', JSON.stringify(oldArray));
-    } else {
-      const newArr = [];
-      newArr.push(this.productObj);
-      this.productObj.id = 1;
-      this.productList = newArr;
-      localStorage.setItem('products', JSON.stringify(newArr));
-    }
-    this.closeModel()
+
+    this.dashboardService.addProduct(this.addProductObj).subscribe({
+      next: (value) => {
+        const { data } = value;
+        const newProduct = new Product();
+
+        newProduct.pk_product_id = data['pk_product_id'];
+        newProduct.product_handle = this.addProductObj.product_handle;
+        newProduct.product_title = this.addProductObj.product_title;
+        newProduct.product_description = this.addProductObj.product_description;
+        newProduct.product_sku = this.addProductObj.product_sku;
+        newProduct.product_grams = this.addProductObj.product_grams;
+        newProduct.product_stock = this.addProductObj.product_stock;
+        newProduct.product_price = this.addProductObj.product_price;
+        newProduct.product_compare_price = this.addProductObj.product_compare_price;
+        newProduct.product_bar_code = this.addProductObj.product_bar_code;
+
+        const newArr = this.productList;
+        newArr.push(newProduct);
+        this.productList = newArr;
+        this.closeAddProductModel();
+      },
+      error: (err) => {
+        console.log(err.error)
+      },
+    });
+    this.closeAddProductModel()
   }
 
   updateProduct(){
 
-    const currentRecord =  this.productList.find(m=> m.id === this.productObj.id);
-    if(currentRecord != undefined) {
-      currentRecord.handle = this.productObj.handle;
-      currentRecord.title =  this.productObj.title;
-      currentRecord.description =  this.productObj.description;
+    this.dashboardService.updateProduct(this.productObj).subscribe({
+      next: (value) => {
+        const currentRecord =  this.productList.find(m=> m.pk_product_id === this.productObj.pk_product_id);
+        if(currentRecord != undefined) {
+          currentRecord.product_handle = this.productObj.product_handle;
+          currentRecord.product_title =  this.productObj.product_title;
+          currentRecord.product_description =  this.productObj.product_description;
 
-      currentRecord.sku = this.productObj.sku;
-      currentRecord.grams =  this.productObj.grams;
-      currentRecord.stock =  this.productObj.stock;
+          currentRecord.product_sku = this.productObj.product_sku;
+          currentRecord.product_grams =  this.productObj.product_grams;
+          currentRecord.product_stock =  this.productObj.product_stock;
 
-      currentRecord.price = this.productObj.price;
-      currentRecord.comparePrice =  this.productObj.comparePrice;
-      currentRecord.barcode =  this.productObj.barcode;
-    };
-    localStorage.setItem('products', JSON.stringify(this.productList));
-    this.closeModel()
+          currentRecord.product_price = this.productObj.product_price;
+          currentRecord.product_compare_price =  this.productObj.product_compare_price;
+          currentRecord.product_bar_code =  this.productObj.product_bar_code;
+        }
+
+        this.closeModel();
+      },
+      error: (err) => {
+        console.log(err.error)
+      },
+    });
+
   }
 
 }
 
 export class Product{
-  id: number;
-  handle: string;
-  title: string;
-  description: string;
-  sku: number;
-  grams: number;
-  stock: number;
-  price: number;
-  comparePrice: number;
-  barcode: number;
+  pk_product_id: number;
+  product_handle: string;
+  product_title: string;
+  product_description: string;
+  product_sku: number;
+  product_grams: number;
+  product_stock: number;
+  product_price: number;
+  product_compare_price: number;
+  product_bar_code: string;
 
   constructor(){
-    this.id = 0;
-    this.handle = '';
-    this.title = '';
-    this.description = '';
-    this.sku = 0;
-    this.grams = 0;
-    this.stock = 0;
-    this.price = 0.0;
-    this.comparePrice = 0.0;
-    this.barcode = 0;
+    this.pk_product_id = 0;
+    this.product_handle = '';
+    this.product_title = '';
+    this.product_description = '';
+    this.product_sku = 0;
+    this.product_grams = 0;
+    this.product_stock = 0;
+    this.product_price = 0.0;
+    this.product_compare_price = 0.0;
+    this.product_bar_code = '';
+  }
+}
+
+export class AddProduct{
+  product_handle: string;
+  product_title: string;
+  product_description: string;
+  product_sku: number;
+  product_grams: number;
+  product_stock: number;
+  product_price: number;
+  product_compare_price: number;
+  product_bar_code: string;
+
+  constructor(){
+    this.product_handle = '';
+    this.product_title = '';
+    this.product_description = '';
+    this.product_sku = 0;
+    this.product_grams = 0;
+    this.product_stock = 0;
+    this.product_price = 0.0;
+    this.product_compare_price = 0.0;
+    this.product_bar_code = '';
   }
 }

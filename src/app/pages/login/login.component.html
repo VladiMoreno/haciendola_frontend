@@ -9,25 +9,25 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group mt-3">
-            <label for="email">Email</label>
+            <label for="text">Username</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
-              name="email"
-              [(ngModel)]="form.email"
+              name="username"
+              [(ngModel)]="form.username"
               required
-              email
-              #email="ngModel"
-              [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
+              minlength="2"
+              #username="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && username.errors }"
               autocomplete="false"
               [autocomplete]="false"
             />
-            @if (email.errors && f.submitted) {
+            @if (username.errors && f.submitted) {
             <div class="invalid-feedback">
-              @if (email.errors['required']) {
-              <div>Email is required</div>
-              } @if (email.errors['email']) {
-              <div>Email must be a valid email address</div>
+              @if (username.errors['required']) {
+              <div>Username is required</div>
+              } @if (username.errors['minlength']) {
+              <div>Username must be at least 2 characters</div>
               }
             </div>
             }
@@ -67,7 +67,7 @@
         <div class="col-md-12">
           @if (showError && f.submitted) {
           <div ng-show="showError" class="alert alert-danger">
-            Wrong credentials!
+            {{ errors }}
           </div>
           }
         </div>
