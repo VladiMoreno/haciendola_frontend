@@ -13,3 +13,12 @@
     font-size: 12px; 
     padding-top: 4px
 }
+
+.forget-password-text{
+    text-decoration: underline;
+}
+
+.forget-password-text:hover {
+    cursor: pointer;
+    color: rgb(38, 121, 246);
+}

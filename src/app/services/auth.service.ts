@@ -18,6 +18,24 @@ export class AuthService {
     });
   }
 
+  verifyPIN(username: string, pin: string): Observable<any> {
+
+    return this.http.post(`${environment.apiUrl}auth/validar-pin`,{
+      "username" : username,
+      "pin" : pin,
+    });
+  }
+
+  changePassword(username: string, pin: string, newPassword : string, repeatNewPassword: string): Observable<any> {
+
+    return this.http.post(`${environment.apiUrl}auth/change-password`,{
+      "username" : username,
+      "pin" : pin,
+      "newPassword": newPassword,
+      "repeatNewPassword": repeatNewPassword
+    });
+  }
+
   // Método para cerrar sesión
   logout(): void {
     localStorage.removeItem('token');

@@ -9,8 +9,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group mt-3">
-            <label for="text">Username</label>
+            <label for="username">Username</label>
             <input
+              id="username"
               type="text"
               class="form-control"
               name="username"
@@ -37,6 +38,7 @@
           <div class="form-group mt-3">
             <label for="password">Password</label>
             <input
+              id="password"
               type="password"
               class="form-control"
               name="password"
@@ -61,7 +63,12 @@
         </div>
       </div>
       <div class="mt-3 mb-3">
-        <button class="btn btn-success pull-right">Login</button>
+        <button class="btn btn-success">Login</button>
+      </div>
+      <div class="mt-3 mb-3">
+        <span class="forget-password-text" (click)="openModel()">
+          Did you forget your password ?</span
+        >
       </div>
       <div class="row">
         <div class="col-md-12">
@@ -74,4 +81,170 @@
       </div>
     </div>
   </form>
+</div>
+
+<div class="modal" id="recoverPassword" #recoverPassword>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Recover your password</h4>
+        <button type="button" class="btn-close" (click)="closeModel()"></button>
+      </div>
+      <form
+        name="form"
+        (ngSubmit)="
+          rpf.form.valid && !recoverPasswordForm.pinCorrect
+            ? onVerifyPIN(rpf)
+            : onChangePassword()
+        "
+        #rpf="ngForm"
+        novalidate
+      >
+        <div class="modal-body">
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <div class="form-group mt-3">
+                <label for="recoverPasswordUsername">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="recoverPasswordUsername"
+                  [(ngModel)]="recoverPasswordForm.username"
+                  required
+                  minlength="2"
+                  #recoverPasswordUsername="ngModel"
+                  [ngClass]="{
+                    'is-invalid':
+                      rpf.submitted && recoverPasswordUsername.errors
+                  }"
+                  autocomplete="false"
+                  [autocomplete]="false"
+                />
+                @if (recoverPasswordUsername.errors && rpf.submitted) {
+                <div class="invalid-feedback">
+                  @if (recoverPasswordUsername.errors['required']) {
+                  <div>Username is required</div>
+                  } @if (recoverPasswordUsername.errors['minlength']) {
+                  <div>Username must be at least 2 characters</div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <div class="form-group mt-3">
+                <label for="pin">PIN</label>
+                <input
+                  id="pin"
+                  type="text"
+                  class="form-control"
+                  name="pin"
+                  [(ngModel)]="recoverPasswordForm.pin"
+                  required
+                  minlength="4"
+                  maxlength="4"
+                  #pin="ngModel"
+                  [ngClass]="{ 'is-invalid': rpf.submitted && pin.errors }"
+                  autocomplete="false"
+                  [autocomplete]="false"
+                />
+                @if (pin.errors && rpf.submitted) {
+                <div class="invalid-feedback">
+                  @if (pin.errors['required']) {
+                  <div>Pin is required</div>
+                  } @if (pin.errors['minlength'] || pin.errors['maxlength']) {
+                  <div>PIN must be at least 4 characters</div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          @if(recoverPasswordForm.pinCorrect){
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <div class="form-group mt-3">
+                <label for="newPassword">New password</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="newPassword"
+                  [(ngModel)]="recoverPasswordForm.newPassword"
+                  required
+                  minlength="4"
+                  #newPassword="ngModel"
+                  [ngClass]="{
+                    'is-invalid': rpf.submitted && newPassword.errors
+                  }"
+                  autocomplete="false"
+                  [autocomplete]="false"
+                />
+                @if (newPassword.errors && rpf.submitted) {
+                <div class="invalid-feedback">
+                  @if (newPassword.errors['required']) {
+                  <div>The new password is required</div>
+                  } @if (newPassword.errors['minlength']) {
+                  <div>The new password must be at least 4 characters</div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <div class="form-group mt-3">
+                <label for="repeatPassword">Repeat password</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="repeatPassword"
+                  [(ngModel)]="recoverPasswordForm.repeatNewPassword"
+                  required
+                  minlength="4"
+                  #repeatNewPassword="ngModel"
+                  [ngClass]="{
+                    'is-invalid': rpf.submitted && repeatNewPassword.errors
+                  }"
+                  autocomplete="false"
+                  [autocomplete]="false"
+                />
+                @if (repeatNewPassword.errors && rpf.submitted) {
+                <div class="invalid-feedback">
+                  @if (repeatNewPassword.errors['required']) {
+                  <div>Repeat the password, is required</div>
+                  } @if (repeatNewPassword.errors['minlength']) {
+                  <div>The new password must be at least 4 characters</div>
+                  }@if (recoverPasswordForm.repeatNewPassword !==
+                  recoverPasswordForm.newPassword) {
+                  <div>The password's are differents</div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="closeModel()">
+            Close
+          </button>
+          @if(!recoverPasswordForm.pinCorrect){
+          <button type="submit" class="btn btn-success">
+            Verify PIN
+            <i class="bi bi-check-lg"></i>
+          </button>
+          } @if(recoverPasswordForm.pinCorrect){
+          <button type="submit" class="btn btn-success">
+            Update password
+            <i class="bi bi-check-lg"></i>
+          </button>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
