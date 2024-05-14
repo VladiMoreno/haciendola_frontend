@@ -1,27 +1,27 @@
-# HaciendolaFrontend
+# Haciendola Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+    Realizado por Vladimir Moreno
 
-## Development server
+## Pasos a realizar luego de clonar el repositorio
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+    correr el comando : "npm install"
+    
+    luego ir al archivo env.config.js
 
-## Code scaffolding
+    que está en : src/app/config/env.config.js
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    y cambiar la variable : "apiUrl" por la url en donde se está corriendo el backend en local
 
-## Build
+## Luego de correr primero el backend en su local (leer el readme del backen)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+    una vez realizado el paso anterior levantar el proyecto con el comando
 
-## Running unit tests
+    "npm start"
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Datos técnicos
 
-## Running end-to-end tests
+    Realizado con Angular 17
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+    Y se utilizó http para consumir la API
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+    Para proteger las rutas hice guards que funcionan con "CanActivateFn"
