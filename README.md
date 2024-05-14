@@ -2,6 +2,10 @@
 
     Realizado por Vladimir Moreno
 
+## Cosas a instalar
+
+    Versión de Node con la que se trabajó : 20.12.2
+
 ## Pasos a realizar luego de clonar el repositorio
 
     correr el comando : "npm install"
