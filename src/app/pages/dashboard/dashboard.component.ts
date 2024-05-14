@@ -82,9 +82,15 @@ export class DashboardComponent implements OnInit {
   onDelete(item: Product) {
     const isDelet = confirm("Are you sure want to Delete");
     if(isDelet) {
-      const currentRecord =  this.productList.findIndex(m=> m.pk_product_id === this.productObj.pk_product_id);
-      this.productList.splice(currentRecord,1);
-      localStorage.setItem('products', JSON.stringify(this.productList));
+      this.dashboardService.removeProduct(item.pk_product_id).subscribe({
+        next: (value) => {
+          const currentRecord =  this.productList.findIndex(m=> m.pk_product_id === item.pk_product_id);
+          this.productList.splice(currentRecord,1);
+        },
+        error: (err) => {
+          console.log(err.error)
+        },
+      });
     }
   }
 
