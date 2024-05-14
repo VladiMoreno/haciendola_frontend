@@ -29,3 +29,6 @@
     Y se utilizó http para consumir la API
 
     Para proteger las rutas hice guards que funcionan con "CanActivateFn"
+
+    Nota: Debido a que no sabía cuando era la fecha limite del sistema, preferí enviarlo antes, pero hizo falta
+    el manejo de errores y mostrar/mejorar validaciones por parte del frontend
